@@ -6,7 +6,7 @@ helpFunction()
    echo "Usage: $0 -n EnvironmentName -p TerraformWorkingDirectory" #$0 script name (i.e vm_connection.sh
    echo -e "\t-n The environment name of the publick key. Only value accepted: cicd"
    echo -e "\t-p Terraform's working directory. Typically is the directory where the terraform has been initialized."
-   echo -e "\t-h User HOME directory. Typically is the path of the environment variable '(dollar sign)HOME'"
+   echo -e "\t-h User HOME directory. Typically is the path of the environment variable '(dollar sign)HOME'. Please omit the last '/' symbol."
    exit 1 # Exit script after printing help
 }
 
