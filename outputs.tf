@@ -1,8 +1,3 @@
-#MySQL DB
-output "output_database_name" {
-  value = module.mysql.db_name
-}
-
 #Virtual machines
 output "output_private_key" {
   sensitive = true
