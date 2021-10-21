@@ -10,7 +10,7 @@ terraform {
     organization = "codehub-spanos" #terraform cloud main user
 
     workspaces {
-      name = "aws_app_cicd" #terraform cloud workspace
+      name = "aws_devops_cicd" #terraform cloud workspace
     }
   }
 }
