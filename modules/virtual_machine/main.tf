@@ -108,6 +108,16 @@ resource "aws_security_group_rule" "ping_public_ip_sg_rule_cicd" {
   description       = "allow pinging elastic public ipv4 address of ec2 instance from local machine"
 }
 
+resource "aws_security_group_rule" "jenkins_inbound_rule_cicd" {
+  type              = "ingress"
+  from_port         = 8080
+  to_port           = 8080
+  protocol          = "tcp"
+  cidr_blocks       = ["94.70.57.33/32", "79.129.48.158/32"] #"94.70.57.33/32", "79.129.48.158/32", "192.168.30.22/32", "0.0.0.0/0"
+  security_group_id = aws_security_group.sg_cicd.id
+  description       = "security rule to open port 8080 for http connection with Jenkins tool."
+}
+
 #--------------------------------
 
 # Outbound rules
@@ -293,11 +303,12 @@ resource "aws_instance" "cicd_server" {
     sudo ansible --version
     pip install setuptools
     echo -e "\tExtract debian stable jenkins key"
-    wget -q -O - https://pkg.jenkins.io/debian-stable/jenkins.io.key | sudo apt-key add -
+    wget -q -O - https://pkg.jenkins.io/debian/jenkins.io.key | sudo apt-key add -
     echo -e "\tInstalling Jenkins tool"
     sudo sh -c 'echo deb http://pkg.jenkins.io/debian-stable binary/ > /etc/apt/sources.list.d/jenkins.list'
-    sudo apt-get update
-    sudo apt-get install -y jenkins
+    sudo apt upgrade -y
+    sudo apt update
+    sudo apt-get install jenkins -y
     sudo systemctl start jenkins
     sudo systemctl status jenkins
     echo -e "\tJenkins is running on default port: 8080"

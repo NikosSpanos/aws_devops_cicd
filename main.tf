@@ -10,7 +10,9 @@ terraform {
     organization = "codehub-spanos" #terraform cloud main user
 
     workspaces {
-      name = "aws_devops_cicd" #terraform cloud workspace
+      name = "aws_devops_cicd" #terraform cloud workspace. 
+      # Note in case the workspace is wrong, terraform will still create the infrastructure because the code and the workspace are linked through github repo.
+      # However, the terraform state and output will be absent from the local root directory.
     }
   }
 }
