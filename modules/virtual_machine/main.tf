@@ -239,7 +239,7 @@ resource "aws_instance" "cicd_server" {
   #The block below fixes the error of attaching default network interface at index 0 
   network_interface {
     network_interface_id = aws_network_interface.network_interface_cicd.id
-    cicdice_index         = 0
+    device_index         = 0
   }
 
   # ebs_block_cicdice {
