@@ -1,0 +1,4 @@
+.terraform/
+.terraform.lock.hcl
+*.tfvars
+aws_remote_cicd_server_key

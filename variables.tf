@@ -13,18 +13,6 @@ variable "credentials_path" {
   sensitive   = true
 }
 
-variable "mysql_master_username" {
-  description = "Server administrator username"
-  type        = string
-  sensitive   = true
-}
-
-variable "mysql_master_password" {
-  description = "Server administrator password"
-  type        = string
-  sensitive   = true
-}
-
 variable "aws_access_key" {
   description = "AWS login access key"
   type        = string
