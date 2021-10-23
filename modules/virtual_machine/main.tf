@@ -307,7 +307,7 @@ resource "aws_instance" "cicd_server" {
     echo -e "\tInstalling Jenkins tool"
     sudo sh -c 'echo deb http://pkg.jenkins.io/debian-stable binary/ > /etc/apt/sources.list.d/jenkins.list'
     sudo apt upgrade -y
-    sudo apt update
+    sudo apt-get update -y
     sudo apt-get install jenkins -y
     sudo systemctl start jenkins
     sudo systemctl status jenkins
