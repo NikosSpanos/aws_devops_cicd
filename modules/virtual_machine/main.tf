@@ -253,7 +253,7 @@ resource "aws_route_table_association" "cicd-public-1-a" {
 # ---------------------------------------- Step 10: Create the AWS EC2 instance ----------------------------------------
 resource "aws_instance" "cicd_server" {
   depends_on                  = [aws_eip.cicd_server_public_ip, aws_network_interface.network_interface_cicd, aws_security_group_rule.ssh_inbound_rule_cicd]
-  ami                         = "ami-00399ec92321828f5" #data.aws_ami.ubuntu-server.id, ami-0a5a9780e8617afe7
+  ami                         = "ami-06d79c60d7454e2af" #"ami-00399ec92321828f5" #data.aws_ami.ubuntu-server.id, ami-0a5a9780e8617afe7
   instance_type               = "t2.micro"
   key_name                    = aws_key_pair.generated_key_cicd.key_name
 
