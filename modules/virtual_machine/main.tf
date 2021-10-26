@@ -32,10 +32,11 @@ data "aws_availability_zones" "available" {
   state = "available"
 }
 
+# Note: An Availability Zone is represented by an AWS Region code followed by a letter identifier (for example, us-east-1a).
 resource "aws_subnet" "subnet_cicd" {
   vpc_id            = aws_vpc.vpc_cicd.id
   cidr_block        = "10.0.1.0/24"
-  availability_zone = "us-east-2a" #data.aws_availability_zones.available.names[0]
+  availability_zone = "eu-west-3a" #data.aws_availability_zones.available.names[0]
   depends_on        = [aws_internet_gateway.gw_cicd]
 
   map_public_ip_on_launch = true
@@ -92,7 +93,7 @@ resource "aws_security_group_rule" "ssh_inbound_rule_cicd" {
   from_port         = 22
   to_port           = 22
   protocol          = "tcp"
-  cidr_blocks       = ["94.70.57.33/32", "79.129.48.158/32"] #"94.70.57.33/32", "79.129.48.158/32", "192.168.30.22/32", "0.0.0.0/0"
+  cidr_blocks       = ["94.70.57.183/32", "79.129.48.158/32"] #"94.70.57.33/32", "79.129.48.158/32", "192.168.30.22/32", "0.0.0.0/0"
   security_group_id = aws_security_group.sg_cicd.id
   description       = "security rule to open port 22 for ssh connection"
 }
@@ -113,9 +114,19 @@ resource "aws_security_group_rule" "jenkins_inbound_rule_cicd" {
   from_port         = 8080
   to_port           = 8080
   protocol          = "tcp"
-  cidr_blocks       = ["94.70.57.33/32", "79.129.48.158/32"] #"94.70.57.33/32", "79.129.48.158/32", "192.168.30.22/32", "0.0.0.0/0"
+  cidr_blocks       = ["94.70.57.183/32", "79.129.48.158/32", "140.82.112.0/20", "185.199.108.0/22", "192.30.252.0/22", "143.55.64.0/20"] #"94.70.57.33/32", "79.129.48.158/32", "192.168.30.22/32", "0.0.0.0/0"
   security_group_id = aws_security_group.sg_cicd.id
-  description       = "security rule to open port 8080 for http connection with Jenkins tool."
+  description       = "security rule to open port 8080 for http connection with Jenkins tool and GitHub webhooks."
+}
+
+resource "aws_security_group_rule" "smtp_inbound_rule_cicd" {
+  type              = "ingress"
+  from_port         = 587
+  to_port           = 587
+  protocol          = "tcp"
+  cidr_blocks       = ["0.0.0.0/0"] #"94.70.57.33/32", "79.129.48.158/32", "192.168.30.22/32", "0.0.0.0/0"
+  security_group_id = aws_security_group.sg_cicd.id
+  description       = "security rule to open port 587 for SMTP communication with Outlook.com email."
 }
 
 #--------------------------------

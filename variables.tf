@@ -1,6 +1,6 @@
 variable "location" {
 	description = "Resource allocation zone in AWS"
-  default     = "us-east-2"
+  default     = "eu-west-3" #Ohio: us-east-2, Paris: eu-west-3
   type        = string
 }
 
