@@ -254,6 +254,7 @@ resource "aws_route_table_association" "cicd-public-1-a" {
 resource "aws_instance" "cicd_server" {
   depends_on                  = [aws_eip.cicd_server_public_ip, aws_network_interface.network_interface_cicd, aws_security_group_rule.ssh_inbound_rule_cicd]
   ami                         = "ami-06d79c60d7454e2af" #"ami-00399ec92321828f5" #data.aws_ami.ubuntu-server.id, ami-0a5a9780e8617afe7
+  #NOTE: https://cloud-images.ubuntu.com/locator/ec2/ to find valid ami's based on Region
   instance_type               = "t2.micro"
   key_name                    = aws_key_pair.generated_key_cicd.key_name
 
@@ -297,6 +298,7 @@ resource "aws_instance" "cicd_server" {
   # }
 
   # User_data seems to work with the predefined ip address that have access only to the ssh port of the ec2 instance
+  # Note: Jenkins will take time to be installed after the ec2 instance is created.
   user_data= <<-EOF
 		#! /bin/bash
     echo -e "\tInstalling modules..."
