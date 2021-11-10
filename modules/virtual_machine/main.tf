@@ -93,7 +93,7 @@ resource "aws_security_group_rule" "ssh_inbound_rule_cicd" {
   from_port         = 22
   to_port           = 22
   protocol          = "tcp"
-  cidr_blocks       = ["94.70.57.183/32", "79.129.48.158/32"] #"94.70.57.33/32", "79.129.48.158/32", "192.168.30.22/32", "0.0.0.0/0"
+  cidr_blocks       = ["94.70.57.33/32", "94.70.57.183/32", "79.129.48.158/32"] #"94.70.57.33/32", "79.129.48.158/32", "192.168.30.22/32", "0.0.0.0/0"
   security_group_id = aws_security_group.sg_cicd.id
   description       = "security rule to open port 22 for ssh connection"
 }
@@ -117,16 +117,6 @@ resource "aws_security_group_rule" "jenkins_inbound_rule_cicd" {
   cidr_blocks       = ["94.70.57.183/32", "79.129.48.158/32", "140.82.112.0/20", "185.199.108.0/22", "192.30.252.0/22", "143.55.64.0/20"] #"94.70.57.33/32", "79.129.48.158/32", "192.168.30.22/32", "0.0.0.0/0"
   security_group_id = aws_security_group.sg_cicd.id
   description       = "security rule to open port 8080 for http connection with Jenkins tool and GitHub webhooks."
-}
-
-resource "aws_security_group_rule" "smtp_inbound_rule_cicd" {
-  type              = "ingress"
-  from_port         = 587
-  to_port           = 587
-  protocol          = "tcp"
-  cidr_blocks       = ["0.0.0.0/0"] #"94.70.57.33/32", "79.129.48.158/32", "192.168.30.22/32", "0.0.0.0/0"
-  security_group_id = aws_security_group.sg_cicd.id
-  description       = "security rule to open port 587 for SMTP communication with Outlook.com email."
 }
 
 #--------------------------------
@@ -163,6 +153,16 @@ resource "aws_security_group_rule" "jenkins_outbound_rule_cicd" {
   cidr_blocks       = ["0.0.0.0/0"] #aws_vpc.vpc_cicd.cidr_block, "0.0.0.0/0"
   security_group_id = aws_security_group.sg_cicd.id
   description       = "Security rule to open port 8080 for outbound connection between Jenkins and remote server"
+}
+
+resource "aws_security_group_rule" "smtp_uotbound_rule_cicd" {
+  type              = "egress"
+  from_port         = 587
+  to_port           = 587
+  protocol          = "tcp"
+  cidr_blocks       = ["0.0.0.0/0"]
+  security_group_id = aws_security_group.sg_cicd.id
+  description       = "security rule to open port 587 for SMTP outbound communication with Outlook.com email."
 }
 
 # ---------------------------------------- Step 4: SSH key generated for accessing VM ----------------------------------------
@@ -303,7 +303,7 @@ resource "aws_instance" "cicd_server" {
 		#! /bin/bash
     echo -e "\tInstalling modules..."
     sudo apt-get update
-    sudo apt-get install -y openjdk-8-jdk
+    sudo apt-get install -y openjdk-11-jdk
     #sudo apt install -y python2
     #sudo curl https://bootstrap.pypa.io/pip/2.7/get-pip.py --output get-pip.py
     #sudo python2 get-pip.py
@@ -314,7 +314,10 @@ resource "aws_instance" "cicd_server" {
     sudo apt install -y python3 python3-pip
     pip3 install ansible
     sudo ansible --version
-    pip install setuptools
+    pip3 install setuptools
+    sudo apt install -y docker.io
+    sudo systemctl start docker
+    sudo systemctl enable docker
     echo -e "\tExtract debian stable jenkins key"
     wget -q -O - https://pkg.jenkins.io/debian/jenkins.io.key | sudo apt-key add -
     echo -e "\tInstalling Jenkins tool"
