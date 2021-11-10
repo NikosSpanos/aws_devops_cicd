@@ -155,7 +155,7 @@ resource "aws_security_group_rule" "jenkins_outbound_rule_cicd" {
   description       = "Security rule to open port 8080 for outbound connection between Jenkins and remote server"
 }
 
-resource "aws_security_group_rule" "smtp_uotbound_rule_cicd" {
+resource "aws_security_group_rule" "smtp_outbound_rule_cicd" {
   type              = "egress"
   from_port         = 587
   to_port           = 587
